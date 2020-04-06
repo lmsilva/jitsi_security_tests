@@ -1,9 +1,10 @@
 #!/bin/bash
 HOSTNAME="meet.jit.si"
-MEETINGROOM="testmeeting15"
+MEETINGROOM="testmeeting200"
 NICKNAME="Evil dude"
 ROOMSECRET="segredo"
-RID="2347156100"
+SETROOMSECRET=1
+RID=$(cat /dev/urandom | tr -dc '0-9' | fold -w 10 | head -n 1)
 
 HEADER="Accept: */*" \
 	"Accept-Encoding: deflate, br" \
@@ -45,7 +46,8 @@ echo "RESPONSE: $RESPONSE"
 echo "$TO"
 RID=`expr $RID + 1`
 
-RESPONSE=`curl -X POST -H "$HEADER" -d "<body rid=\"$RID\" sid=\"$SID\" xmlns=\"http://jabber.org/protocol/httpbind\"><iq from=\"$TO\" id=\"1dde0b0c-7f48-42b9-af7e-a091a6107d0c:sendIQ\" to=\"$HOSTNAME\" type=\"get\" xmlns=\"jabber:client\"><query xmlns=\"http://jabber.org/protocol/disco#info\"/></iq></body>" https://$HOSTNAME/http-bind?room=$MEETINGROOM`
+ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4 | head -n 1)-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4 | head -n 1)-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
+RESPONSE=`curl -X POST -H "$HEADER" -d "<body rid=\"$RID\" sid=\"$SID\" xmlns=\"http://jabber.org/protocol/httpbind\"><iq from=\"$TO\" id=\"$ID:sendIQ\" to=\"$HOSTNAME\" type=\"get\" xmlns=\"jabber:client\"><query xmlns=\"http://jabber.org/protocol/disco#info\"/></iq></body>" https://$HOSTNAME/http-bind?room=$MEETINGROOM`
 echo "RESPONSE: $RESPONSE"
 RID=`expr $RID + 1`
 
@@ -53,18 +55,27 @@ RID=`expr $RID + 1`
 #echo "RESPONSE: $RESPONSE"
 #RID=`expr $RID + 1`
 
-RESPONSE=`curl -X POST -H "$HEADER" -d "<body rid=\"$RID\" sid=\"$SID\" xmlns=\"http://jabber.org/protocol/httpbind\"><iq id=\"2a7e641d-f46a-4e54-b159-64a580f2202c:sendIQ\" to=\"focus.$HOSTNAME\" type=\"set\" xmlns=\"jabber:client\"><conference machine-uid=\"f768da7eab215c3316277e9407d33775\" room=\"$MEETINGROOM@conference.$HOSTNAME\" xmlns=\"http://jitsi.org/protocol/focus\"><property name=\"channelLastN\" value=\"-1\"/><property name=\"disableRtx\" value=\"false\"/><property name=\"enableLipSync\" value=\"true\"/><property name=\"openSctp\" value=\"true\"/></conference></iq></body>" https://$HOSTNAME/http-bind?room=$MEETINGROOM`
+ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4 | head -n 1)-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4 | head -n 1)-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
+MACHINEUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+RESPONSE=`curl -X POST -H "$HEADER" -d "<body rid=\"$RID\" sid=\"$SID\" xmlns=\"http://jabber.org/protocol/httpbind\"><iq id=\"$ID:sendIQ\" to=\"focus.$HOSTNAME\" type=\"set\" xmlns=\"jabber:client\"><conference machine-uid=\"$MACHINEUID\" room=\"$MEETINGROOM@conference.$HOSTNAME\" xmlns=\"http://jitsi.org/protocol/focus\"><property name=\"channelLastN\" value=\"-1\"/><property name=\"disableRtx\" value=\"false\"/><property name=\"enableLipSync\" value=\"true\"/><property name=\"openSctp\" value=\"true\"/></conference></iq></body>" https://$HOSTNAME/http-bind?room=$MEETINGROOM`
 echo "RESPONSE: $RESPONSE"
 RID=`expr $RID + 1`
 
-RESPONSE=`curl -X POST -H "$HEADER" -d "<body rid=\"$RID\" sid=\"$SID\" xmlns=\"http://jabber.org/protocol/httpbind\"><presence to=\"$MEETINGROOM@conference.$HOSTNAME/5d2c750b\" xmlns=\"jabber:client\"><x xmlns=\"http://jabber.org/protocol/muc\"/><stats-id>Mable-myg</stats-id><c hash=\"sha-1\" node=\"http://jitsi.org/jitsimeet\" ver=\"bInwKC/7Lt0uq2Y1/f66QQKgRS4=\" xmlns=\"http://jabber.org/protocol/caps\"/><avatar-id>a47e27aec320d624ba15189b2dae0052</avatar-id><nick xmlns=\"http://jabber.org/protocol/nick\">$NICKNAME</nick><audiomuted xmlns=\"http://jitsi.org/jitmeet/audio\">false</audiomuted><videoType xmlns=\"http://jitsi.org/jitmeet/video\">camera</videoType><videomuted xmlns=\"http://jitsi.org/jitmeet/video\">false</videomuted></presence></body>" https://$HOSTNAME/http-bind?room=$MEETINGROOM`
+PRESENCEID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+RESPONSE=`curl -X POST -H "$HEADER" -d "<body rid=\"$RID\" sid=\"$SID\" xmlns=\"http://jabber.org/protocol/httpbind\"><presence to=\"$MEETINGROOM@conference.$HOSTNAME/$PRESENCEID\" xmlns=\"jabber:client\"><x xmlns=\"http://jabber.org/protocol/muc\"/><stats-id>Mable-myg</stats-id><c hash=\"sha-1\" node=\"http://jitsi.org/jitsimeet\" ver=\"bInwKC/7Lt0uq2Y1/f66QQKgRS4=\" xmlns=\"http://jabber.org/protocol/caps\"/><avatar-id>a47e27aec320d624ba15189b2dae0052</avatar-id><nick xmlns=\"http://jabber.org/protocol/nick\">$NICKNAME</nick><audiomuted xmlns=\"http://jitsi.org/jitmeet/audio\">false</audiomuted><videoType xmlns=\"http://jitsi.org/jitmeet/video\">camera</videoType><videomuted xmlns=\"http://jitsi.org/jitmeet/video\">false</videomuted></presence></body>" https://$HOSTNAME/http-bind?room=$MEETINGROOM`
 echo "RESPONSE: $RESPONSE"
 RID=`expr $RID + 1`
 
-RESPONSE=`curl -X POST -H "$HEADER" -d "<body rid=\"$RID\" sid=\"$SID\" xmlns=\"http://jabber.org/protocol/httpbind\"><presence to=\"$MEETINGROOM@conference.$HOSTNAME/5d2c750b\" xmlns=\"jabber:client\"><stats-id>Mable-myg</stats-id><c hash=\"sha-1\" node=\"http://jitsi.org/jitsimeet\" ver=\"bInwKC/7Lt0uq2Y1/f66QQKgRS4=\" xmlns=\"http://jabber.org/protocol/caps\"/><avatar-id>a47e27aec320d624ba15189b2dae0052</avatar-id><nick xmlns=\"http://jabber.org/protocol/nick\">$NICKNAME</nick><audiomuted xmlns=\"http://jitsi.org/jitmeet/audio\">false</audiomuted><videoType xmlns=\"http://jitsi.org/jitmeet/video\">camera</videoType><videomuted xmlns=\"http://jitsi.org/jitmeet/video\">false</videomuted></presence><iq id=\"14e323c6-95d7-4cae-baff-46dba6bd8e75:sendIQ\" to=\"$MEETINGROOM@conference.$HOSTNAME\" type=\"get\" xmlns=\"jabber:client\"><query xmlns=\"http://jabber.org/protocol/disco#info\"/></iq></body>" https://$HOSTNAME/http-bind?room=$MEETINGROOM`
+ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4 | head -n 1)-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4 | head -n 1)-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
+AVATARID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 33 | head -n 1)
+RESPONSE=`curl -X POST -H "$HEADER" -d "<body rid=\"$RID\" sid=\"$SID\" xmlns=\"http://jabber.org/protocol/httpbind\"><presence to=\"$MEETINGROOM@conference.$HOSTNAME/$PRESENCEID\" xmlns=\"jabber:client\"><stats-id>Mable-myg</stats-id><c hash=\"sha-1\" node=\"http://jitsi.org/jitsimeet\" ver=\"bInwKC/7Lt0uq2Y1/f66QQKgRS4=\" xmlns=\"http://jabber.org/protocol/caps\"/><avatar-id>$AVATARID</avatar-id><nick xmlns=\"http://jabber.org/protocol/nick\">$NICKNAME</nick><audiomuted xmlns=\"http://jitsi.org/jitmeet/audio\">false</audiomuted><videoType xmlns=\"http://jitsi.org/jitmeet/video\">camera</videoType><videomuted xmlns=\"http://jitsi.org/jitmeet/video\">false</videomuted></presence><iq id=\"$ID:sendIQ\" to=\"$MEETINGROOM@conference.$HOSTNAME\" type=\"get\" xmlns=\"jabber:client\"><query xmlns=\"http://jabber.org/protocol/disco#info\"/></iq></body>" https://$HOSTNAME/http-bind?room=$MEETINGROOM`
 echo "RESPONSE: $RESPONSE"
 RID=`expr $RID + 1`
 
-RESPONSE=`curl -X POST -H "$HEADER" -d "<body rid=\"$RID\" sid=\"$SID\" xmlns=\"http://jabber.org/protocol/httpbind\"><iq id=\"4b24691f-1751-4787-b879-7fc1953a936c:sendIQ\" to=\"$MEETINGROOM@conference.$HOSTNAME\" type=\"set\" xmlns=\"jabber:client\"><query xmlns=\"http://jabber.org/protocol/muc#owner\"><x type=\"submit\" xmlns=\"jabber:x:data\"><field var=\"FORM_TYPE\"><value>http://jabber.org/protocol/muc#roomconfig</value></field><field var=\"muc#roomconfig_roomsecret\"><value>$ROOMSECRET</value></field><field var=\"muc#roomconfig_whois\"><value>anyone</value></field></x></query></iq></body>" https://$HOSTNAME/http-bind?room=$MEETINGROOM`
-echo "RESPONSE: $RESPONSE"
-RID=`expr $RID + 1`
+if [ $SETROOMSECRET -eq 1 ]
+then
+	ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4 | head -n 1)-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4 | head -n 1)-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
+	RESPONSE=`curl -X POST -H "$HEADER" -d "<body rid=\"$RID\" sid=\"$SID\" xmlns=\"http://jabber.org/protocol/httpbind\"><iq id=\"$ID:sendIQ\" to=\"$MEETINGROOM@conference.$HOSTNAME\" type=\"set\" xmlns=\"jabber:client\"><query xmlns=\"http://jabber.org/protocol/muc#owner\"><x type=\"submit\" xmlns=\"jabber:x:data\"><field var=\"FORM_TYPE\"><value>http://jabber.org/protocol/muc#roomconfig</value></field><field var=\"muc#roomconfig_roomsecret\"><value>$ROOMSECRET</value></field><field var=\"muc#roomconfig_whois\"><value>anyone</value></field></x></query></iq></body>" https://$HOSTNAME/http-bind?room=$MEETINGROOM`
+	echo "RESPONSE: $RESPONSE"
+	RID=`expr $RID + 1`
+fi

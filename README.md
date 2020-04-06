@@ -12,6 +12,8 @@ To use it, simply edit the top parameters on simulate.sh:
 ...and run the script!
 
 Also noticed a few other things that might be worth pursuing:
+* It seems any user can join a conference room, kick all other users and set a password on the room...
+
 * Jicofo's configuration file, by default, is installed at /etc/jitsi/jicofo/config
   * In it, a few different parameters are defined: **JICOFO_SECRET, JICOFO_AUTH_USER and JICOFO_AUTH_PASSWORD**
   * By default, this file is NOT world readable! However, any unprivileged user with local access to the system can view those access credentials by looking at the Java process startup arguments:
