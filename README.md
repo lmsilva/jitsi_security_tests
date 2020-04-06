@@ -8,6 +8,7 @@ To use it, simply edit the top parameters on simulate.sh:
 * MEETINGROOM="testmeeting15"
 * NICKNAME="Evil dude"
 * ROOMSECRET="segredo"
+* SETROOMSECRET=1 # 1 for true
 
 ...and run the script!
 
