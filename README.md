@@ -4,10 +4,10 @@ Just some random tests I'm performing to Jitsi...
 For the time being, created a script that can simulate a connection to Jitsi's XMPP server to either join or create a new room and set a password on it.
 
 To use it, simply edit the top parameters on simulate.sh:
-HOSTNAME="meet.jit.si"
-MEETINGROOM="testmeeting15"
-NICKNAME="Evil dude"
-ROOMSECRET="segredo"
+* HOSTNAME="meet.jit.si"
+* MEETINGROOM="testmeeting15"
+* NICKNAME="Evil dude"
+* ROOMSECRET="segredo"
 
 ...and run the script!
 
@@ -18,6 +18,7 @@ Also noticed a few other things that might be worth pursuing:
   * e.g. java -Xmx3072m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp -Dnet.java.sip.communicator.SC_HOME_DIR_LOCATION=/etc/jitsi ... --host=localhost --domain=<SERVERHOSTNAME> --port=5347 --secret=**<THESECRET>** --user_name=**<THEUSERNAME>** --user_domain=auth.<SERVERHOSTNAME> --user_password=**<THEPASSWORD>**
 
 * There's also an out of bounds string exception when generating conference rooms larger than 1023 characters, though there's a try / catch exception around it, so it seems to be handled properly
+e.g. https://<SERVERHOSTNAME>/gckkhznugergdoembnvqtvnhhtafqbffpipcseobdoveigyicecqspenmdhciqqegxtldxlbcufcsafmycxpisgjehzwgyidhnrdwtrzeegvhipwxyovmtvophzydmbsersqybzuresymdhhfvfizqyczyeeilvpegftsutqgmwzbsssbykzxlkpkadyfhnpxfdlsqcdlhdbqbfjahllxnciwbxpzgyqdsseqlttcgeiqrzxcbxxixbogtyukjofdgdqxqmycqwjsgfcwhdnejxpefghocmmcjrfcbijldpoffkmggrposplmdizzeaccdvnjwcczddwoycmujhfjswqpepbtbcnmvfsyaysfgfrqudvasitaortzoosprkohrshfeodpftbvtfnnsjlxcnmhujwpheukbuhjeymffpkigtyojeawqrzhbrxlwnbtntuavnpzexcbztnrytwxnwfizxdvibihyhlaxanvltcheynudydlgrapjjgagmfexitmybblmkzymrcrhcygfinhgsspvllsbsrjegsklbdpmswsqmltgmaqmtrumebpnfwiioibdiyijeoulxgvjmltjexkuuliyazjptfkanpechmapzmmgwrnlkvkqhfcrwbbtyvgswyzuptilqtdjvbvmxmidkldepwamabpoqrdsezphqhvamdqkwhmwndxeowfswxqcfgsrvebdhzwgblyppcgabgpsrdrkmthancdwroazguunfgymuzbpahbxcnlutitijykmzypfjvbylfosiiosjczxhfkzhkhaswjhzdtdfratvcmuzxunjfpvzhllziqihnhiyufbmzcakocgjhmbtmrvyxsynohfechcwrxqdhxywfwfwncnqtqjdzxfxplgaekvhdrdvadglfroxgekviyippxbtwkdhtptysmtvprdbwybsyrymjczsaexcfwunyczrugzkiwinfwgcfsuphleyolgioquqinxtoswatjykitpotnfbb
 `
 Jicofo 2020-04-06 02:16:11.479 SEVERE: [67] org.jitsi.jicofo.xmpp.FocusComponent.handleIQSetImpl().324 org.jxmpp.stringprep.XmppStringprepException: Given string is longer then 1023 bytes
 org.jxmpp.stringprep.XmppStringprepException: Given string is longer then 1023 bytes
